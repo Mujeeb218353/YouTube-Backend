@@ -3,23 +3,19 @@ dotenv.config({
     path: "./env"
 });
 import app from './app.js';
-import connectDB from "./db/index.js";
+import { connectDB } from "./db/index.js";
 
 app.get('/',(req, res)=>{
-    res.send('hello')
+    res.send('hello');
 })
 
 connectDB().then(
-    app.on('error',(err)=>{
-        console.log('ERROR:',err);
-    }),
     app.listen(process.env.PORT,()=>{
         console.log(`Your app is listening on http://localhost:${process.env.PORT}`);
     })
 ).catch((err)=>{
     console.log(err);
 });
-
 
 
 
