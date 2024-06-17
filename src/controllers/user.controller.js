@@ -1,5 +1,5 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
-import { apiError } from "../utils/ApiError.js";
+import { apiError } from "../utils/apiError.js";
 import { user } from "../model/user.model.js";
 import {
   uploadOnCloudinary,
@@ -43,7 +43,7 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new apiError(409, "User with email or username already exists");
   }
 
-  const avatarLocalPath = req.files?.avatar?.[0]?.path;
+  const avatarLocalPath = req.files?.avatar[0]?.path;
   let coverImageLocalPath;
   if (
     req.files &&
@@ -68,28 +68,24 @@ const registerUser = asyncHandler(async (req, res) => {
     username: username.toLowerCase(),
     email,
     password,
-    avatar: avatar.url,
-    coverImage: coverImage?.url || "",
+    avatar: avatar.secure_url,
+    coverImage: coverImage?.secure_url || "",
   });
 
   await newUser.save();
-  const createdUser = await user
-    .findById(newUser._id)
-    .select("-password -refreshToken");
+  const createdUser = await user.findById(newUser._id).select("-password -refreshToken");
   if (!createdUser) {
     throw new apiError(500, "Something went wrong while creating user");
   }
 
-  res
-    .status(201)
-    .json(new apiResponse(200, createdUser, "User created successfully"));
+  res.status(201).json(new apiResponse(200, createdUser, "User created successfully"));
 });
 
 const loginUser = asyncHandler(async (req, res) => {
   // req body ---> data
   const { username, email, password } = req.body;
   // for login we need username or email
-  if (!(username || (email && password))) {
+  if (!((username || email ) && password)) {
     throw new apiError(400, "Username or password is required");
   }
   // find user
