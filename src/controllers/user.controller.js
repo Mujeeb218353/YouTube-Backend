@@ -262,7 +262,7 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
 
   const avatar = await uploadOnCloudinary(avatarLocalPath);
 
-  if (!avatar.url) {
+  if (!avatar.secure_url) {
     throw new apiError(400, "Failed to upload avatar");
   }
 
@@ -271,7 +271,7 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
       req.User?._id,
       {
         $set: {
-          avatar: avatar.url,
+          avatar: avatar.secure_url,
         },
       },
       {
@@ -297,7 +297,7 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
 
   const coverImage = await uploadOnCloudinary(coverImageLocalPath);
 
-  if (!coverImage.url) {
+  if (!coverImage.secure_url) {
     throw new apiError(400, "Failed to upload Cover Image");
   }
 
@@ -306,7 +306,7 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
       req.User?._id,
       {
         $set: {
-          coverImage: coverImage.url,
+          coverImage: coverImage.secure_url,
         },
       },
       {
